@@ -1,4 +1,3 @@
-import React from "react";
 import GasPriceView from "./GasPriceView";
 
 const GasPriceContainer = ({ gasPrices, countdown, error, status }) => {

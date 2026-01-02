@@ -1,4 +1,3 @@
-import React from "react";
 import GasPriceContainer from "../components/GasPriceContainer";
 import EthereumLogo from "../assets/images/ethereum-logo.svg";
 import {
