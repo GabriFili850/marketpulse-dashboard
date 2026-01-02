@@ -8,9 +8,9 @@ const GasPriceView = ({ gasPrices, countdown, error, status = "loading" }) => {
         <p>{error}</p>
       ) : status === "ready" ? (
         <>
-          <GasPriceText>Safe: {gasPrices.safe} Gwei</GasPriceText>
+          <GasPriceText>Low: {gasPrices.low} Gwei</GasPriceText>
           <GasPriceText>Average: {gasPrices.average} Gwei</GasPriceText>
-          <GasPriceText>Fast: {gasPrices.fast} Gwei</GasPriceText>
+          <GasPriceText>High: {gasPrices.high} Gwei</GasPriceText>
           <CountdownText>Refreshing in {countdown} seconds...</CountdownText>
         </>
       ) : (

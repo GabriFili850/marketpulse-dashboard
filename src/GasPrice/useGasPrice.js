@@ -51,10 +51,9 @@ const useGasPrice = (apiKey) => {
 
       try {
         const requestUrl = `${ETHERSCAN_API_BASE_URL}?chainid=${ETHERSCAN_CHAIN_ID}&module=gastracker&action=gasoracle&apikey=${apiKey}`;
-        const response = await axios.get(
-          requestUrl,
-          { signal: controller.signal }
-        );
+        const response = await axios.get(requestUrl, {
+          signal: controller.signal,
+        });
         if (response.data?.status === "0") {
           const apiMessage =
             response.data?.result ||
@@ -62,22 +61,63 @@ const useGasPrice = (apiKey) => {
             response.data?.error?.message;
           throw new Error(`Etherscan error: ${apiMessage || "Unknown error"}`);
         }
-        const oracle = response.data?.result;
-        const safeGas = Number.parseFloat(oracle?.SafeGasPrice);
-        const averageGas = Number.parseFloat(oracle?.ProposeGasPrice);
-        const fastGas = Number.parseFloat(oracle?.FastGasPrice);
+        const oracle = Array.isArray(response.data?.result)
+          ? response.data.result[0]
+          : response.data?.result;
+        if (typeof oracle === "string") {
+          throw new Error(`Etherscan error: ${oracle}`);
+        }
+        const getNumericField = (source, keys) => {
+          for (const key of keys) {
+            const value = source?.[key];
+            const parsed = Number.parseFloat(value);
+            if (Number.isFinite(parsed)) {
+              return parsed;
+            }
+          }
+          return null;
+        };
+        const lowGas = getNumericField(oracle, [
+          "SafeGasPrice",
+          "safeGasPrice",
+          "LowGasPrice",
+          "lowGasPrice",
+          "SafeGas",
+          "safe",
+          "low",
+        ]);
+        const averageGas = getNumericField(oracle, [
+          "ProposeGasPrice",
+          "proposeGasPrice",
+          "AverageGasPrice",
+          "averageGasPrice",
+          "AverageGas",
+          "average",
+          "avg",
+        ]);
+        const highGas = getNumericField(oracle, [
+          "FastGasPrice",
+          "fastGasPrice",
+          "HighGasPrice",
+          "highGasPrice",
+          "FastGas",
+          "fast",
+          "high",
+        ]);
         if (
-          !Number.isFinite(safeGas) ||
+          !Number.isFinite(lowGas) ||
           !Number.isFinite(averageGas) ||
-          !Number.isFinite(fastGas)
+          !Number.isFinite(highGas)
         ) {
-          throw new Error("Invalid gas oracle response");
+          throw new Error(
+            `Invalid gas oracle response: ${JSON.stringify(oracle)}`
+          );
         }
         if (isMountedRef.current) {
           setGasPrices({
-            safe: safeGas.toFixed(2),
+            low: lowGas.toFixed(2),
             average: averageGas.toFixed(2),
-            fast: fastGas.toFixed(2),
+            high: highGas.toFixed(2),
           });
           setError(null);
         }

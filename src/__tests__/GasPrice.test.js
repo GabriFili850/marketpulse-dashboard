@@ -28,18 +28,18 @@ describe("GasPrice component", () => {
         status: "1",
         message: "OK",
         result: {
-          SafeGasPrice: "10",
+          LowGasPrice: "10",
           ProposeGasPrice: "20",
-          FastGasPrice: "30",
+          HighGasPrice: "30",
         },
       },
     });
 
     render(<GasPriceContainer />);
 
-    expect(await screen.findByText(/Safe: 10.00 Gwei/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Low: 10.00 Gwei/i)).toBeInTheDocument();
     expect(screen.getByText(/Average: 20.00 Gwei/i)).toBeInTheDocument();
-    expect(screen.getByText(/Fast: 30.00 Gwei/i)).toBeInTheDocument();
+    expect(screen.getByText(/High: 30.00 Gwei/i)).toBeInTheDocument();
   });
 
   test("renders an error when the request fails", async () => {
@@ -60,9 +60,9 @@ describe("GasPrice component", () => {
           status: "1",
           message: "OK",
           result: {
-            SafeGasPrice: "15",
+            LowGasPrice: "15",
             ProposeGasPrice: "25",
-            FastGasPrice: "35",
+            HighGasPrice: "35",
           },
         },
       });
@@ -83,11 +83,9 @@ describe("GasPrice component", () => {
       await Promise.resolve();
     });
 
-    expect(screen.getByText(/Safe: 15.00 Gwei/i)).toBeInTheDocument();
+    expect(screen.getByText(/Low: 15.00 Gwei/i)).toBeInTheDocument();
     expect(screen.queryByText(/Network error/i)).toBeNull();
-    expect(
-      screen.getByText(/Refreshing in 15 seconds/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Refreshing in 15 seconds/i)).toBeInTheDocument();
   });
 
   test("shows a missing API key message", () => {
