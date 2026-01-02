@@ -1,18 +1,36 @@
 import React from "react";
 import GasPriceContainer from "./GasPrice";
-import { AppContainer, AppHeader } from "./styles";
 import EthereumLogo from "./images/ethereum-logo.svg";
+import {
+  AppContainer,
+  AppHeader,
+  AppHeaderMeta,
+  AppShell,
+  AppSubtitle,
+  AppTitle,
+  GlobalStyle,
+  LogoBadge,
+  LogoMark,
+} from "./styles";
 
 function App() {
   return (
     <AppContainer>
-      <img
-        src={EthereumLogo}
-        alt='Ethereum Logo'
-        style={{ width: "50px", height: "auto" }}
-      />
-      <AppHeader>Etherscan Gas Oracle</AppHeader>
-      <GasPriceContainer />
+      <GlobalStyle />
+      <AppShell>
+        <AppHeader>
+          <LogoBadge>
+            <LogoMark src={EthereumLogo} alt="Ethereum Logo" />
+          </LogoBadge>
+          <AppHeaderMeta>
+            <AppTitle>Etherscan Gas Oracle</AppTitle>
+            <AppSubtitle>
+              Low, average, and high estimates from the Etherscan oracle.
+            </AppSubtitle>
+          </AppHeaderMeta>
+        </AppHeader>
+        <GasPriceContainer />
+      </AppShell>
     </AppContainer>
   );
 }

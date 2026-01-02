@@ -1,20 +1,47 @@
 import React from "react";
-import { GasPriceContainer, GasPriceText, CountdownText } from "./styles";
+import {
+  CountdownText,
+  ErrorText,
+  GasPriceContainer,
+  GasPriceGrid,
+  GasPriceItem,
+  GasPriceLabel,
+  GasPriceUnit,
+  GasPriceValue,
+  StatusText,
+} from "./styles";
 
 const GasPriceView = ({ gasPrices, countdown, error, status = "loading" }) => {
   return (
     <GasPriceContainer>
       {status === "error" ? (
-        <p>{error}</p>
+        <ErrorText>{error}</ErrorText>
       ) : status === "ready" ? (
         <>
-          <GasPriceText>Low: {gasPrices.low} Gwei</GasPriceText>
-          <GasPriceText>Average: {gasPrices.average} Gwei</GasPriceText>
-          <GasPriceText>High: {gasPrices.high} Gwei</GasPriceText>
+          <GasPriceGrid>
+            <GasPriceItem>
+              <GasPriceLabel>Low</GasPriceLabel>
+              <GasPriceValue>
+                {gasPrices.low} <GasPriceUnit>Gwei</GasPriceUnit>
+              </GasPriceValue>
+            </GasPriceItem>
+            <GasPriceItem>
+              <GasPriceLabel>Average</GasPriceLabel>
+              <GasPriceValue>
+                {gasPrices.average} <GasPriceUnit>Gwei</GasPriceUnit>
+              </GasPriceValue>
+            </GasPriceItem>
+            <GasPriceItem>
+              <GasPriceLabel>High</GasPriceLabel>
+              <GasPriceValue>
+                {gasPrices.high} <GasPriceUnit>Gwei</GasPriceUnit>
+              </GasPriceValue>
+            </GasPriceItem>
+          </GasPriceGrid>
           <CountdownText>Refreshing in {countdown} seconds...</CountdownText>
         </>
       ) : (
-        <p>Loading gas price...</p>
+        <StatusText>Loading gas price...</StatusText>
       )}
     </GasPriceContainer>
   );
