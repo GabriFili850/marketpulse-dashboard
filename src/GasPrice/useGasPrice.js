@@ -3,17 +3,28 @@ import axios from "axios";
 import {
   ETHERSCAN_API_BASE_URL,
   ETHERSCAN_CHAIN_ID,
+  DEFAULT_REFRESH_INTERVAL_MS,
   GENERIC_FETCH_ERROR_MESSAGE,
   MAX_BACKOFF_MS,
   MISSING_API_KEY_MESSAGE,
-  REFRESH_INTERVAL_MS,
 } from "./constants";
 
 const useGasPrice = (apiKey) => {
-  const [gasPrice, setGasPrice] = useState(null);
-  const [countdown, setCountdown] = useState(REFRESH_INTERVAL_MS / 1000);
+  const resolveRefreshIntervalMs = () => {
+    const rawValue = process.env.REACT_APP_REFRESH_INTERVAL_MS;
+    const parsed = Number.parseInt(rawValue, 10);
+    if (Number.isFinite(parsed) && parsed > 0) {
+      return parsed;
+    }
+    return DEFAULT_REFRESH_INTERVAL_MS;
+  };
+  const baseRefreshMs = resolveRefreshIntervalMs();
+  const [gasPrices, setGasPrices] = useState(null);
+  const [countdown, setCountdown] = useState(() =>
+    Math.round(baseRefreshMs / 1000)
+  );
   const [error, setError] = useState(null);
-  const refreshMsRef = useRef(REFRESH_INTERVAL_MS);
+  const refreshMsRef = useRef(baseRefreshMs);
   const abortControllerRef = useRef(null);
   const isMountedRef = useRef(false);
 
@@ -37,31 +48,38 @@ const useGasPrice = (apiKey) => {
       abortControllerRef.current = controller;
 
       try {
-        const requestUrl = `${ETHERSCAN_API_BASE_URL}?chainid=${ETHERSCAN_CHAIN_ID}&module=proxy&action=eth_gasPrice&apikey=${apiKey}`;
+        const requestUrl = `${ETHERSCAN_API_BASE_URL}?chainid=${ETHERSCAN_CHAIN_ID}&module=gastracker&action=gasoracle&apikey=${apiKey}`;
         const response = await axios.get(
           requestUrl,
           { signal: controller.signal }
         );
-        const result = response.data?.result;
-        const isHexResult =
-          typeof result === "string" && /^0x[0-9a-fA-F]+$/.test(result);
-        if (!isHexResult) {
+        if (response.data?.status === "0") {
           const apiMessage =
-            response.data?.error?.message ||
             response.data?.result ||
-            response.data?.message;
-          if (apiMessage) {
-            throw new Error(`Etherscan error: ${apiMessage}`);
-          }
-          throw new Error("Invalid gas price response");
+            response.data?.message ||
+            response.data?.error?.message;
+          throw new Error(`Etherscan error: ${apiMessage || "Unknown error"}`);
         }
-        const parsed = Number.parseInt(result, 16);
-        const gasPriceInGwei = parsed / 1e9;
+        const oracle = response.data?.result;
+        const safeGas = Number.parseFloat(oracle?.SafeGasPrice);
+        const averageGas = Number.parseFloat(oracle?.ProposeGasPrice);
+        const fastGas = Number.parseFloat(oracle?.FastGasPrice);
+        if (
+          !Number.isFinite(safeGas) ||
+          !Number.isFinite(averageGas) ||
+          !Number.isFinite(fastGas)
+        ) {
+          throw new Error("Invalid gas oracle response");
+        }
         if (isMountedRef.current) {
-          setGasPrice(gasPriceInGwei.toFixed(2));
+          setGasPrices({
+            safe: safeGas.toFixed(2),
+            average: averageGas.toFixed(2),
+            fast: fastGas.toFixed(2),
+          });
           setError(null);
         }
-        refreshMsRef.current = REFRESH_INTERVAL_MS;
+        refreshMsRef.current = baseRefreshMs;
       } catch (error) {
         if (error?.code === "ERR_CANCELED" || axios.isCancel?.(error)) {
           return;
@@ -103,9 +121,9 @@ const useGasPrice = (apiKey) => {
     };
   }, [apiKey]);
 
-  const status = error ? "error" : gasPrice ? "ready" : "loading";
+  const status = error ? "error" : gasPrices ? "ready" : "loading";
 
-  return { gasPrice, countdown, error, status };
+  return { gasPrices, countdown, error, status };
 };
 
 export default useGasPrice;

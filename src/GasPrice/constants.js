@@ -1,4 +1,4 @@
-export const REFRESH_INTERVAL_MS = 15000; // 15 seconds
+export const DEFAULT_REFRESH_INTERVAL_MS = 15000; // 15 seconds
 export const MAX_BACKOFF_MS = 60000; // 60 seconds
 
 export const MISSING_API_KEY_MESSAGE =

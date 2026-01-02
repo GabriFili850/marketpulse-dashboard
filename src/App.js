@@ -11,7 +11,7 @@ function App() {
         alt='Ethereum Logo'
         style={{ width: "50px", height: "auto" }}
       />
-      <AppHeader>Etherscan Gas Price</AppHeader>
+      <AppHeader>Etherscan Gas Oracle</AppHeader>
       <GasPriceContainer />
     </AppContainer>
   );

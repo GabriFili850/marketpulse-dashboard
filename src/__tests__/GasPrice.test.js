@@ -22,19 +22,24 @@ describe("GasPrice component", () => {
     jest.useRealTimers();
   });
 
-  test("renders gas price", async () => {
+  test("renders gas prices", async () => {
     axios.get.mockResolvedValue({
       data: {
-        result: "0x" + (20 * 1e9).toString(16), // Mock the response data to return 20 Gwei
+        status: "1",
+        message: "OK",
+        result: {
+          SafeGasPrice: "10",
+          ProposeGasPrice: "20",
+          FastGasPrice: "30",
+        },
       },
     });
 
     render(<GasPriceContainer />);
 
-    const gasPriceElement = await screen.findByText(
-      /Current Gas Price: 20.00 Gwei/i
-    );
-    expect(gasPriceElement).toBeInTheDocument();
+    expect(await screen.findByText(/Safe: 10.00 Gwei/i)).toBeInTheDocument();
+    expect(screen.getByText(/Average: 20.00 Gwei/i)).toBeInTheDocument();
+    expect(screen.getByText(/Fast: 30.00 Gwei/i)).toBeInTheDocument();
   });
 
   test("renders an error when the request fails", async () => {
@@ -52,7 +57,13 @@ describe("GasPrice component", () => {
       .mockRejectedValueOnce(new Error("Network error"))
       .mockResolvedValueOnce({
         data: {
-          result: "0x" + (30 * 1e9).toString(16),
+          status: "1",
+          message: "OK",
+          result: {
+            SafeGasPrice: "15",
+            ProposeGasPrice: "25",
+            FastGasPrice: "35",
+          },
         },
       });
 
@@ -72,9 +83,7 @@ describe("GasPrice component", () => {
       await Promise.resolve();
     });
 
-    expect(
-      screen.getByText(/Current Gas Price: 30.00 Gwei/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Safe: 15.00 Gwei/i)).toBeInTheDocument();
     expect(screen.queryByText(/Network error/i)).toBeNull();
     expect(
       screen.getByText(/Refreshing in 15 seconds/i)

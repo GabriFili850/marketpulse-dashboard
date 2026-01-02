@@ -1,8 +1,8 @@
 # Etherscan Gas Price Monitor
-This React application displays the current gas price on the Ethereum network in real-time. The app fetches the gas price data from the Etherscan API and updates the displayed value every 15 seconds. This tool can be useful for Ethereum users who want to keep track of gas prices to optimize transaction costs.
+This React application displays safe, average, and fast gas prices on the Ethereum network in real time. The app fetches gas oracle data from the Etherscan API and updates the displayed values every 15 seconds (or a configured interval). This tool can be useful for Ethereum users who want to keep track of gas prices to optimize transaction costs.
 
 ## Features
-Displays the current gas price in Gwei format
+Displays safe, average, and fast gas prices in Gwei format
 
 Automatically refreshes gas price data every 15 seconds
 
@@ -33,6 +33,10 @@ cd etherscan-gas-price-monitor
 `REACT_APP_ETHERSCAN_API_KEY=YOUR_ETHERSCAN_API_KEY`
 
 Replace YOUR_ETHERSCAN_API_KEY with your actual Etherscan API key. You can obtain one by signing up at https://etherscan.io/myapikey.
+
+### Optional: configure the refresh interval (milliseconds):
+
+`REACT_APP_REFRESH_INTERVAL_MS=15000`
 
 ### Start the development server:
 
