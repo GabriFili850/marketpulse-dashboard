@@ -41,7 +41,7 @@ describe("GasPrice component", () => {
 
     render(<GasPrice />);
 
-    const errorElement = await screen.findByText(/Error fetching gas price/i);
+    const errorElement = await screen.findByText(/Network error/i);
     expect(errorElement).toBeInTheDocument();
   });
 
@@ -61,7 +61,7 @@ describe("GasPrice component", () => {
       await Promise.resolve();
     });
 
-    expect(screen.getByText(/Error fetching gas price/i)).toBeInTheDocument();
+    expect(screen.getByText(/Network error/i)).toBeInTheDocument();
 
     await act(async () => {
       jest.advanceTimersByTime(30000);
@@ -74,7 +74,7 @@ describe("GasPrice component", () => {
     expect(
       screen.getByText(/Current Gas Price: 30.00 Gwei/i)
     ).toBeInTheDocument();
-    expect(screen.queryByText(/Error fetching gas price/i)).toBeNull();
+    expect(screen.queryByText(/Network error/i)).toBeNull();
     expect(
       screen.getByText(/Refreshing in 15 seconds/i)
     ).toBeInTheDocument();
