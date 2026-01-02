@@ -1,5 +1,5 @@
 import React from "react";
-import GasPrice from "./GasPrice";
+import GasPriceContainer from "./GasPrice";
 import { AppContainer, AppHeader } from "./styles";
 import EthereumLogo from "./images/ethereum-logo.svg";
 
@@ -12,7 +12,7 @@ function App() {
         style={{ width: "50px", height: "auto" }}
       />
       <AppHeader>Etherscan Gas Price</AppHeader>
-      <GasPrice />
+      <GasPriceContainer />
     </AppContainer>
   );
 }

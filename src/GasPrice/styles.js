@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import { CenteredColumn } from "../sharedStyles";
 
 export const GasPriceContainer = CenteredColumn;

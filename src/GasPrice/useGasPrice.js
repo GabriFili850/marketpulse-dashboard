@@ -100,7 +100,9 @@ const useGasPrice = (apiKey) => {
     };
   }, [apiKey]);
 
-  return { gasPrice, countdown, error };
+  const status = error ? "error" : gasPrice ? "ready" : "loading";
+
+  return { gasPrice, countdown, error, status };
 };
 
 export default useGasPrice;
