@@ -103,14 +103,26 @@ export const NewsContent = styled.div`
   padding: 14px 16px 16px;
 `;
 
-export const NewsLink = styled.a`
+export const NewsLink = styled.span`
   color: #0b2c5f;
   font-weight: 600;
-  text-decoration: none;
   line-height: 1.35;
+`;
 
-  &:hover {
+export const NewsItemLink = styled.a`
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+
+  &:hover ${NewsLink} {
     color: #0b5ed7;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #0b5ed7;
+    outline-offset: 2px;
   }
 `;
 

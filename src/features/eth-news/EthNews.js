@@ -10,6 +10,7 @@ import {
   NewsImage,
   NewsImageWrap,
   NewsItem,
+  NewsItemLink,
   NewsLink,
   NewsList,
   NewsMeta,
@@ -79,24 +80,28 @@ const EthNews = ({ items, status, error }) => {
 
               return (
                 <NewsItem key={item.id}>
-                  <NewsImageWrap>
-                    <NewsImage
-                      src={imageUrl}
-                      alt={item.title}
-                      loading="lazy"
-                      data-fallback={isFallback}
-                      onError={handleImageError}
-                    />
-                  </NewsImageWrap>
-                  <NewsContent>
-                    <NewsLink href={item.url} target="_blank" rel="noreferrer">
-                      {item.title}
-                    </NewsLink>
-                    <NewsMeta>
-                      <span>{item.source}</span>
-                      <span>{formatTimestamp(item.timestamp)}</span>
-                    </NewsMeta>
-                  </NewsContent>
+                  <NewsItemLink
+                    href={item.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <NewsImageWrap>
+                      <NewsImage
+                        src={imageUrl}
+                        alt={item.title}
+                        loading="lazy"
+                        data-fallback={isFallback}
+                        onError={handleImageError}
+                      />
+                    </NewsImageWrap>
+                    <NewsContent>
+                      <NewsLink>{item.title}</NewsLink>
+                      <NewsMeta>
+                        <span>{item.source}</span>
+                        <span>{formatTimestamp(item.timestamp)}</span>
+                      </NewsMeta>
+                    </NewsContent>
+                  </NewsItemLink>
                 </NewsItem>
               );
             })}
