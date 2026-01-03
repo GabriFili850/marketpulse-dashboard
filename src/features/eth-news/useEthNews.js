@@ -8,6 +8,23 @@ const DEFAULT_NEWS_API_URL =
 const MIN_REFRESH_MS = 300000;
 const GENERIC_NEWS_ERROR_MESSAGE = "Error fetching Ethereum news";
 
+const normalizeImageUrl = (item) => {
+  const rawUrl = item.imageurl || item.imageUrl || item.urlToImage || item.image;
+  if (!rawUrl) {
+    return null;
+  }
+  if (rawUrl.startsWith("http")) {
+    return rawUrl;
+  }
+  if (rawUrl.startsWith("//")) {
+    return `https:${rawUrl}`;
+  }
+  if (rawUrl.startsWith("/")) {
+    return `https://www.cryptocompare.com${rawUrl}`;
+  }
+  return rawUrl;
+};
+
 const normalizeNewsItem = (item) => {
   if (!item) {
     return null;
@@ -34,6 +51,7 @@ const normalizeNewsItem = (item) => {
     url,
     source,
     timestamp,
+    imageUrl: normalizeImageUrl(item),
   };
 };
 

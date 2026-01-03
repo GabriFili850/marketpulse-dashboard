@@ -54,16 +54,53 @@ export const NewsList = styled.ul`
   padding: 0;
   display: grid;
   gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  @media (max-width: 980px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const NewsItem = styled.li`
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 14px 16px;
-  border-radius: 14px;
+  border-radius: 16px;
   background: linear-gradient(135deg, #f5f8fd 0%, #eef4fb 100%);
   border: 1px solid #e1e9f4;
+  overflow: hidden;
+`;
+
+export const NewsImageWrap = styled.div`
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #e7edf7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const NewsImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+
+  &[data-fallback="true"] {
+    object-fit: contain;
+    padding: 18px;
+    background: #eef3fb;
+  }
+`;
+
+export const NewsContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px 16px;
 `;
 
 export const NewsLink = styled.a`

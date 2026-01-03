@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
+import EthereumLogo from "../../assets/images/ethereum-logo.svg";
 import { MAX_NEWS_PAGES, NEWS_ITEMS_PER_PAGE } from "./constants";
 import {
   NewsBadge,
   NewsCard,
+  NewsContent,
   NewsError,
   NewsHeader,
+  NewsImage,
+  NewsImageWrap,
   NewsItem,
   NewsLink,
   NewsList,
@@ -51,6 +55,13 @@ const EthNews = ({ items, status, error }) => {
   const showPagination = status === "ready" && totalPages > 1;
   const pages = Array.from({ length: totalPages }, (_, index) => index);
 
+  const handleImageError = (event) => {
+    if (event.currentTarget.src !== EthereumLogo) {
+      event.currentTarget.src = EthereumLogo;
+      event.currentTarget.dataset.fallback = "true";
+    }
+  };
+
   return (
     <NewsCard>
       <NewsHeader>
@@ -62,17 +73,33 @@ const EthNews = ({ items, status, error }) => {
       ) : status === "ready" ? (
         <>
           <NewsList>
-            {pageItems.map((item) => (
-              <NewsItem key={item.id}>
-                <NewsLink href={item.url} target="_blank" rel="noreferrer">
-                  {item.title}
-                </NewsLink>
-                <NewsMeta>
-                  <span>{item.source}</span>
-                  <span>{formatTimestamp(item.timestamp)}</span>
-                </NewsMeta>
-              </NewsItem>
-            ))}
+            {pageItems.map((item) => {
+              const imageUrl = item.imageUrl || EthereumLogo;
+              const isFallback = !item.imageUrl;
+
+              return (
+                <NewsItem key={item.id}>
+                  <NewsImageWrap>
+                    <NewsImage
+                      src={imageUrl}
+                      alt={item.title}
+                      loading="lazy"
+                      data-fallback={isFallback}
+                      onError={handleImageError}
+                    />
+                  </NewsImageWrap>
+                  <NewsContent>
+                    <NewsLink href={item.url} target="_blank" rel="noreferrer">
+                      {item.title}
+                    </NewsLink>
+                    <NewsMeta>
+                      <span>{item.source}</span>
+                      <span>{formatTimestamp(item.timestamp)}</span>
+                    </NewsMeta>
+                  </NewsContent>
+                </NewsItem>
+              );
+            })}
           </NewsList>
           {showPagination ? (
             <NewsPagination>
