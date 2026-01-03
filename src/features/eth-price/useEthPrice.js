@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import axios from "axios";
 import getRefreshIntervalMs from "../../shared/config/refreshInterval";
+import usePollingRequest from "../../shared/hooks/usePollingRequest";
 
 const GENERIC_ETH_PRICE_ERROR_MESSAGE = "Error fetching ETH price";
 
@@ -11,68 +12,61 @@ const MIN_REFRESH_MS = 60000;
 const useEthPrice = () => {
   const baseRefreshMs = getRefreshIntervalMs();
   const refreshMs = Math.max(baseRefreshMs, MIN_REFRESH_MS);
-  const [price, setPrice] = useState(null);
   const [history, setHistory] = useState([]);
   const [error, setError] = useState(null);
-  const abortControllerRef = useRef(null);
-  const isMountedRef = useRef(false);
 
-  useEffect(() => {
-    isMountedRef.current = true;
+  const fetchEthPrice = useCallback(async (signal) => {
+    const response = await axios.get(COINGECKO_URL, { signal });
+    const points = response.data?.prices;
+    if (!Array.isArray(points) || points.length === 0) {
+      throw new Error("Invalid ETH price response");
+    }
+    const mapped = points
+      .map(([timestamp, value]) => ({
+        timestamp,
+        value: Number.parseFloat(value),
+      }))
+      .filter((point) => Number.isFinite(point.value));
+    const lastPoint = mapped[mapped.length - 1];
+    if (!lastPoint) {
+      throw new Error("Invalid ETH price response");
+    }
+    return mapped;
+  }, []);
 
-    const fetchEthPrice = async () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      const controller = new AbortController();
-      abortControllerRef.current = controller;
+  const handleSuccess = useCallback((mapped) => {
+    setHistory(mapped);
+    setError(null);
+  }, []);
 
-      try {
-        const response = await axios.get(COINGECKO_URL, {
-          signal: controller.signal,
-        });
-        const points = response.data?.prices;
-        if (!Array.isArray(points) || points.length === 0) {
-          throw new Error("Invalid ETH price response");
-        }
-        const mapped = points
-          .map(([timestamp, value]) => ({
-            timestamp,
-            value: Number.parseFloat(value),
-          }))
-          .filter((point) => Number.isFinite(point.value));
-        const lastPoint = mapped[mapped.length - 1];
-        if (!lastPoint) {
-          throw new Error("Invalid ETH price response");
-        }
+  const handleError = useCallback((error) => {
+    console.error("Error fetching ETH price:", error);
+    setError(error?.message || GENERIC_ETH_PRICE_ERROR_MESSAGE);
+  }, []);
 
-        if (isMountedRef.current) {
-          setPrice(lastPoint.value.toFixed(2));
-          setHistory(mapped);
-          setError(null);
-        }
-      } catch (error) {
-        if (error?.code === "ERR_CANCELED" || axios.isCancel?.(error)) {
-          return;
-        }
-        console.error("Error fetching ETH price:", error);
-        if (isMountedRef.current) {
-          setError(error?.message || GENERIC_ETH_PRICE_ERROR_MESSAGE);
-        }
-      }
-    };
+  const shouldIgnoreError = useCallback(
+    (error) => error?.code === "ERR_CANCELED" || axios.isCancel?.(error),
+    []
+  );
 
-    fetchEthPrice();
-    const interval = setInterval(fetchEthPrice, refreshMs);
+  usePollingRequest({
+    fetcher: fetchEthPrice,
+    intervalMs: refreshMs,
+    onSuccess: handleSuccess,
+    onError: handleError,
+    shouldIgnoreError,
+  });
 
-    return () => {
-      isMountedRef.current = false;
-      clearInterval(interval);
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
-  }, [refreshMs]);
+  const price = useMemo(() => {
+    if (!history.length) {
+      return null;
+    }
+    const latestPoint = history[history.length - 1];
+    if (!latestPoint || !Number.isFinite(latestPoint.value)) {
+      return null;
+    }
+    return latestPoint.value.toFixed(2);
+  }, [history]);
 
   const status = error ? "error" : price ? "ready" : "loading";
 

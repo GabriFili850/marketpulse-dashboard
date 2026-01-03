@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import axios from "axios";
 import getRefreshIntervalMs from "../../shared/config/refreshInterval";
+import usePollingRequest from "../../shared/hooks/usePollingRequest";
 import { MAX_NEWS_ITEMS } from "./constants";
 
 const DEFAULT_NEWS_API_URL =
@@ -74,55 +75,40 @@ const useEthNews = () => {
   const refreshMs = Math.max(baseRefreshMs, MIN_REFRESH_MS);
   const [items, setItems] = useState([]);
   const [error, setError] = useState(null);
-  const abortControllerRef = useRef(null);
-  const isMountedRef = useRef(false);
 
-  useEffect(() => {
-    isMountedRef.current = true;
+  const fetchNews = useCallback(async (signal) => {
+    const requestUrl =
+      process.env.REACT_APP_NEWS_API_URL || DEFAULT_NEWS_API_URL;
+    const response = await axios.get(requestUrl, { signal });
+    const normalized = extractNewsItems(response.data);
+    if (!normalized.length) {
+      throw new Error("Invalid news response");
+    }
+    return normalized;
+  }, []);
 
-    const fetchNews = async () => {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      const controller = new AbortController();
-      abortControllerRef.current = controller;
+  const handleSuccess = useCallback((normalized) => {
+    setItems(normalized);
+    setError(null);
+  }, []);
 
-      try {
-        const requestUrl =
-          process.env.REACT_APP_NEWS_API_URL || DEFAULT_NEWS_API_URL;
-        const response = await axios.get(requestUrl, {
-          signal: controller.signal,
-        });
-        const normalized = extractNewsItems(response.data);
-        if (!normalized.length) {
-          throw new Error("Invalid news response");
-        }
-        if (isMountedRef.current) {
-          setItems(normalized);
-          setError(null);
-        }
-      } catch (error) {
-        if (error?.code === "ERR_CANCELED" || axios.isCancel?.(error)) {
-          return;
-        }
-        console.error("Error fetching Ethereum news:", error);
-        if (isMountedRef.current) {
-          setError(error?.message || GENERIC_NEWS_ERROR_MESSAGE);
-        }
-      }
-    };
+  const handleError = useCallback((error) => {
+    console.error("Error fetching Ethereum news:", error);
+    setError(error?.message || GENERIC_NEWS_ERROR_MESSAGE);
+  }, []);
 
-    fetchNews();
-    const interval = setInterval(fetchNews, refreshMs);
+  const shouldIgnoreError = useCallback(
+    (error) => error?.code === "ERR_CANCELED" || axios.isCancel?.(error),
+    []
+  );
 
-    return () => {
-      isMountedRef.current = false;
-      clearInterval(interval);
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-    };
-  }, [refreshMs]);
+  usePollingRequest({
+    fetcher: fetchNews,
+    intervalMs: refreshMs,
+    onSuccess: handleSuccess,
+    onError: handleError,
+    shouldIgnoreError,
+  });
 
   const status = error ? "error" : items.length ? "ready" : "loading";
 
