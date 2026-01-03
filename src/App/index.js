@@ -1,4 +1,5 @@
 import EthPriceChart from "../features/eth-price/EthPriceChart";
+import EthNews from "../features/eth-news/EthNews";
 import GasPriceView from "../features/gas/GasPriceView";
 import EthereumLogo from "../assets/images/ethereum-logo.svg";
 import {
@@ -13,9 +14,10 @@ import {
   LogoMark,
 } from "./styles";
 
-function App({ gasState, ethState }) {
+function App({ gasState, ethState, newsState }) {
   const { gasPrices, countdown, error, status } = gasState;
   const { price, history, error: ethError, status: ethStatus } = ethState;
+  const { items, error: newsError, status: newsStatus } = newsState;
 
   return (
     <AppContainer>
@@ -44,6 +46,7 @@ function App({ gasState, ethState }) {
           error={error}
           status={status}
         />
+        <EthNews items={items} status={newsStatus} error={newsError} />
       </AppShell>
     </AppContainer>
   );

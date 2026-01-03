@@ -5,6 +5,7 @@ MarketPulse Dashboard is a React dashboard that displays Ethereum price and gas 
 Shows Ethereum price in real time
 Shows a 12-month ETH price chart in USD
 Displays low/average/high gas prices in real time
+Curated Ethereum news headlines
 Automatically refreshes price and gas data on a configurable interval
 Countdown timer showing time remaining until the next refresh
 Responsive and mobile-friendly design
@@ -36,6 +37,10 @@ Replace YOUR_ETHERSCAN_API_KEY with your actual Etherscan API key. You can obtai
 ### Optional: configure the refresh interval (milliseconds):
 
 `REACT_APP_REFRESH_INTERVAL_MS=15000`
+
+### Optional: configure the news API URL:
+
+`REACT_APP_NEWS_API_URL=https://min-api.cryptocompare.com/data/v2/news/?categories=ETH`
 
 ### Start the development server:
 

@@ -17,6 +17,21 @@ describe("Market data", () => {
     },
   });
 
+
+  const mockEthNewsSuccess = () => ({
+    data: {
+      Data: [
+        {
+          id: "news-1",
+          title: "Ethereum merge update",
+          url: "https://example.com/eth-news",
+          source_info: { name: "CryptoNews" },
+          published_on: 1700000000,
+        },
+      ],
+    },
+  });
+
   const mockGasOracleSuccess = (overrides = {}) => ({
     data: {
       status: "1",
@@ -62,14 +77,17 @@ describe("Market data", () => {
       if (url.includes("coingecko.com")) {
         return Promise.resolve(mockEthPriceSuccess());
       }
+      if (url.includes("cryptocompare.com")) {
+        return Promise.resolve(mockEthNewsSuccess());
+      }
       return Promise.reject(new Error("Unknown endpoint"));
     });
 
     render(<MarketDataController />);
 
-    expect(screen.getByText(/Low/i)).toBeInTheDocument();
-    expect(screen.getByText(/Average/i)).toBeInTheDocument();
-    expect(screen.getByText(/High/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Low/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Average/i)).toBeInTheDocument();
+    expect(await screen.findByText(/High/i)).toBeInTheDocument();
     expect(await findGasValue("10.00")).toBeInTheDocument();
     expect(await findGasValue("20.00")).toBeInTheDocument();
     expect(await findGasValue("30.00")).toBeInTheDocument();
@@ -82,6 +100,9 @@ describe("Market data", () => {
       }
       if (url.includes("coingecko.com")) {
         return Promise.resolve(mockEthPriceSuccess());
+      }
+      if (url.includes("cryptocompare.com")) {
+        return Promise.resolve(mockEthNewsSuccess());
       }
       return Promise.reject(new Error("Unknown endpoint"));
     });
@@ -112,6 +133,9 @@ describe("Market data", () => {
       if (url.includes("coingecko.com")) {
         return Promise.resolve(mockEthPriceSuccess());
       }
+      if (url.includes("cryptocompare.com")) {
+        return Promise.resolve(mockEthNewsSuccess());
+      }
       return Promise.reject(new Error("Unknown endpoint"));
     });
 
@@ -138,7 +162,15 @@ describe("Market data", () => {
 
   test("shows a missing API key message", () => {
     delete process.env.REACT_APP_ETHERSCAN_API_KEY;
-    axios.get.mockResolvedValue(mockEthPriceSuccess());
+    axios.get.mockImplementation((url) => {
+      if (url.includes("coingecko.com")) {
+        return Promise.resolve(mockEthPriceSuccess());
+      }
+      if (url.includes("cryptocompare.com")) {
+        return Promise.resolve(mockEthNewsSuccess());
+      }
+      return Promise.reject(new Error("Unknown endpoint"));
+    });
     render(<MarketDataController />);
 
     expect(screen.getAllByText(MISSING_API_KEY_MESSAGE).length).toBeGreaterThan(
