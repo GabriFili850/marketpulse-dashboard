@@ -56,10 +56,11 @@ export const ChartCurrency = styled.span`
 
 export const ChartBody = styled.div`
   margin-top: 16px;
-  padding: 14px 16px;
+  padding: 18px 16px 18px 48px;
   border-radius: 18px;
   background: linear-gradient(135deg, #f5f8fd 0%, #eef4fb 100%);
   border: 1px solid #e1e9f4;
+  position: relative;
 `;
 
 export const ChartSvg = styled.svg`
@@ -67,10 +68,15 @@ export const ChartSvg = styled.svg`
   height: 120px;
 `;
 
+export const ChartGridLine = styled.line`
+  stroke: rgba(11, 94, 215, 0.16);
+  stroke-width: 0.6;
+`;
+
 export const ChartLine = styled.polyline`
   fill: none;
   stroke: #0b5ed7;
-  stroke-width: 2.4;
+  stroke-width: 1.1;
   stroke-linecap: round;
   stroke-linejoin: round;
 `;
@@ -83,6 +89,44 @@ export const ChartMeta = styled.p`
   margin: 12px 0 0;
   font-size: 0.92rem;
   color: #52627a;
+`;
+
+export const ChartAxisLabels = styled.div`
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+`;
+
+export const ChartAxisLabel = styled.span`
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #6b7b94;
+`;
+
+export const ChartMonthAxis = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+  margin-top: 10px;
+  padding: 0 16px 0 48px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+
+`;
+
+export const ChartMonthLabel = styled.span`
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #6b7b94;
+  letter-spacing: 0.01em;
+  text-align: center;
 `;
 
 export const ChartStatus = styled.p`
