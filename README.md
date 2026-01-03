@@ -1,8 +1,9 @@
 # Etherscan Gas Price Monitor
-This React application displays low, average, and high gas prices on the Ethereum network in real time. The app fetches gas oracle data from the Etherscan API and updates the displayed values every 15 seconds (or a configured interval). This tool can be useful for Ethereum users who want to keep track of gas prices to optimize transaction costs.
+This React application displays low, average, and high gas prices on the Ethereum network in real time, along with a 12‑month ETH price chart. The app fetches gas oracle data from the Etherscan API and uses CoinGecko for the ETH price history, updating on a configurable interval. This tool can be useful for Ethereum users who want to keep track of gas prices to optimize transaction costs.
 
 ## Features
 Displays low, average, and high gas prices in Gwei format
+Shows a chart of the current ETH price in USD
 
 Automatically refreshes gas price data every 15 seconds
 

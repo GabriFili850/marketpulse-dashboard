@@ -1,3 +1,4 @@
+import EthPriceChart from "../components/EthPriceChart";
 import GasPriceContainer from "../components/GasPriceContainer";
 import EthereumLogo from "../assets/images/ethereum-logo.svg";
 import {
@@ -12,7 +13,10 @@ import {
   LogoMark,
 } from "./styles";
 
-function App({ gasPrices, countdown, error, status }) {
+function App({ gasState, ethState }) {
+  const { gasPrices, countdown, error, status } = gasState;
+  const { price, history, error: ethError, status: ethStatus } = ethState;
+
   return (
     <AppContainer>
       <GlobalStyle />
@@ -28,6 +32,12 @@ function App({ gasPrices, countdown, error, status }) {
             </AppSubtitle>
           </AppHeaderMeta>
         </AppHeader>
+        <EthPriceChart
+          price={price}
+          history={history}
+          status={ethStatus}
+          error={ethError}
+        />
         <GasPriceContainer
           gasPrices={gasPrices}
           countdown={countdown}

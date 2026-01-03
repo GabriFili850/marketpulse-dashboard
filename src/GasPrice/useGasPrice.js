@@ -3,22 +3,14 @@ import axios from "axios";
 import {
   ETHERSCAN_API_BASE_URL,
   ETHERSCAN_CHAIN_ID,
-  DEFAULT_REFRESH_INTERVAL_MS,
   GENERIC_FETCH_ERROR_MESSAGE,
   MAX_BACKOFF_MS,
   MISSING_API_KEY_MESSAGE,
 } from "./constants";
+import getRefreshIntervalMs from "../utils/getRefreshIntervalMs";
 
 const useGasPrice = ({ apiKey }) => {
-  const resolveRefreshIntervalMs = () => {
-    const rawValue = process.env.REACT_APP_REFRESH_INTERVAL_MS;
-    const parsed = Number.parseInt(rawValue, 10);
-    if (Number.isFinite(parsed) && parsed > 0) {
-      return parsed;
-    }
-    return DEFAULT_REFRESH_INTERVAL_MS;
-  };
-  const baseRefreshMs = resolveRefreshIntervalMs();
+  const baseRefreshMs = getRefreshIntervalMs();
   const [gasPrices, setGasPrices] = useState(null);
   const [countdown, setCountdown] = useState(() =>
     Math.round(baseRefreshMs / 1000)
