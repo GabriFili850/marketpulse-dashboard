@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import getRefreshIntervalMs from "../../shared/config/refreshInterval";
+import { MAX_NEWS_ITEMS } from "./constants";
 
 const DEFAULT_NEWS_API_URL =
-  "https://min-api.cryptocompare.com/data/v2/news/?categories=ETH";
+  `https://min-api.cryptocompare.com/data/v2/news/?categories=ETH&limit=${MAX_NEWS_ITEMS}`;
 const MIN_REFRESH_MS = 300000;
 const GENERIC_NEWS_ERROR_MESSAGE = "Error fetching Ethereum news";
-const MAX_NEWS_ITEMS = 6;
 
 const normalizeNewsItem = (item) => {
   if (!item) {

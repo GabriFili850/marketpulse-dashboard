@@ -1,0 +1,3 @@
+export const NEWS_ITEMS_PER_PAGE = 6;
+export const MAX_NEWS_PAGES = 6;
+export const MAX_NEWS_ITEMS = NEWS_ITEMS_PER_PAGE * MAX_NEWS_PAGES;

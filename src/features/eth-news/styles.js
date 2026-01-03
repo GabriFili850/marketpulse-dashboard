@@ -95,3 +95,54 @@ export const NewsError = styled(NewsStatus)`
   color: #cc2f4c;
   font-weight: 600;
 `;
+
+export const NewsPagination = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+`;
+
+export const NewsPageNumbers = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+`;
+
+export const NewsPageButton = styled.button`
+  border: 1px solid #d6e0ef;
+  background: #ffffff;
+  color: #2a3b55;
+  padding: 6px 10px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  min-width: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease,
+    color 0.2s ease;
+
+  &:hover:enabled {
+    background: #f2f6fd;
+    box-shadow: 0 6px 14px rgba(15, 28, 46, 0.08);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
+    transform: none;
+  }
+
+  &[data-active="true"] {
+    background: #0b5ed7;
+    border-color: #0b5ed7;
+    color: #ffffff;
+    box-shadow: 0 8px 16px rgba(11, 94, 215, 0.2);
+  }
+`;
