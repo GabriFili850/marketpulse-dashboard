@@ -1,4 +1,4 @@
-import { DEFAULT_REFRESH_INTERVAL_MS } from "../GasPrice/constants";
+export const DEFAULT_REFRESH_INTERVAL_MS = 15000; // 15 seconds
 
 const getRefreshIntervalMs = () => {
   const rawValue = process.env.REACT_APP_REFRESH_INTERVAL_MS;

@@ -1,11 +1,11 @@
 import { render, screen, act } from "@testing-library/react";
 import axios from "axios";
-import GasPriceController from "../controllers/GasPriceController";
-import { MISSING_API_KEY_MESSAGE } from "../GasPrice/constants";
+import MarketDataController from "../controllers/MarketDataController";
+import { MISSING_API_KEY_MESSAGE } from "../features/gas/constants";
 
 jest.mock("axios");
 
-describe("GasPrice component", () => {
+describe("Market data", () => {
   const originalEnv = process.env;
   let consoleErrorSpy;
   const mockEthPriceSuccess = (price = 2300.45) => ({
@@ -65,7 +65,7 @@ describe("GasPrice component", () => {
       return Promise.reject(new Error("Unknown endpoint"));
     });
 
-    render(<GasPriceController />);
+    render(<MarketDataController />);
 
     expect(screen.getByText(/Low/i)).toBeInTheDocument();
     expect(screen.getByText(/Average/i)).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe("GasPrice component", () => {
       return Promise.reject(new Error("Unknown endpoint"));
     });
 
-    render(<GasPriceController />);
+    render(<MarketDataController />);
 
     const errorElement = await screen.findByText(/Network error/i);
     expect(errorElement).toBeInTheDocument();
@@ -115,7 +115,7 @@ describe("GasPrice component", () => {
       return Promise.reject(new Error("Unknown endpoint"));
     });
 
-    render(<GasPriceController />);
+    render(<MarketDataController />);
 
     await act(async () => {
       await Promise.resolve();
@@ -139,7 +139,7 @@ describe("GasPrice component", () => {
   test("shows a missing API key message", () => {
     delete process.env.REACT_APP_ETHERSCAN_API_KEY;
     axios.get.mockResolvedValue(mockEthPriceSuccess());
-    render(<GasPriceController />);
+    render(<MarketDataController />);
 
     expect(screen.getAllByText(MISSING_API_KEY_MESSAGE).length).toBeGreaterThan(
       0

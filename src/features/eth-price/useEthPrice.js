@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { GENERIC_FETCH_ERROR_MESSAGE } from "../GasPrice/constants";
-import getRefreshIntervalMs from "../utils/getRefreshIntervalMs";
+import getRefreshIntervalMs from "../../shared/config/refreshInterval";
+
+const GENERIC_ETH_PRICE_ERROR_MESSAGE = "Error fetching ETH price";
 
 const COINGECKO_URL =
   "https://api.coingecko.com/api/v3/coins/ethereum/market_chart?vs_currency=usd&days=365";
@@ -56,7 +57,7 @@ const useEthPrice = () => {
         }
         console.error("Error fetching ETH price:", error);
         if (isMountedRef.current) {
-          setError(error?.message || GENERIC_FETCH_ERROR_MESSAGE);
+          setError(error?.message || GENERIC_ETH_PRICE_ERROR_MESSAGE);
         }
       }
     };

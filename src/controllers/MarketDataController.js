@@ -1,8 +1,8 @@
 import App from "../App";
-import useGasPrice from "../GasPrice/useGasPrice";
-import useEthPrice from "../hooks/useEthPrice";
+import useGasPrice from "../features/gas/useGasPrice";
+import useEthPrice from "../features/eth-price/useEthPrice";
 
-const GasPriceController = () => {
+const MarketDataController = () => {
   const apiKey = process.env.REACT_APP_ETHERSCAN_API_KEY;
   const gasState = useGasPrice({ apiKey });
   const ethState = useEthPrice();
@@ -10,4 +10,4 @@ const GasPriceController = () => {
   return <App gasState={gasState} ethState={ethState} />;
 };
 
-export default GasPriceController;
+export default MarketDataController;

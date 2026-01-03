@@ -7,7 +7,7 @@ import {
   MAX_BACKOFF_MS,
   MISSING_API_KEY_MESSAGE,
 } from "./constants";
-import getRefreshIntervalMs from "../utils/getRefreshIntervalMs";
+import getRefreshIntervalMs from "../../shared/config/refreshInterval";
 
 const useGasPrice = ({ apiKey }) => {
   const baseRefreshMs = getRefreshIntervalMs();

@@ -1,5 +1,5 @@
-import EthPriceChart from "../components/EthPriceChart";
-import GasPriceContainer from "../components/GasPriceContainer";
+import EthPriceChart from "../features/eth-price/EthPriceChart";
+import GasPriceView from "../features/gas/GasPriceView";
 import EthereumLogo from "../assets/images/ethereum-logo.svg";
 import {
   AppContainer,
@@ -38,7 +38,7 @@ function App({ gasState, ethState }) {
           status={ethStatus}
           error={ethError}
         />
-        <GasPriceContainer
+        <GasPriceView
           gasPrices={gasPrices}
           countdown={countdown}
           error={error}

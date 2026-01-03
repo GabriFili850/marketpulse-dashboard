@@ -17,7 +17,7 @@ import {
   ChartStatus,
   ChartSvg,
   ChartTitle,
-} from "./EthPriceChart.styles";
+} from "./styles";
 
 const buildSparkline = (history) => {
   if (!history || history.length === 0) {
