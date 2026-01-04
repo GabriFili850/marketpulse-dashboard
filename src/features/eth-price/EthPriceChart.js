@@ -1,4 +1,4 @@
-import React from "react";
+import { useId } from "react";
 import {
   ChartAxisLabel,
   ChartAxisLabels,
@@ -44,7 +44,6 @@ const buildSparkline = (history) => {
   return { points, area, minValue, maxValue, midValue };
 };
 
-
 const buildMonthLabels = (history) => {
   if (!history || history.length === 0) {
     return [];
@@ -65,6 +64,7 @@ const buildMonthLabels = (history) => {
   }
   return labels.slice(-12);
 };
+
 const formatAxisValue = (value) => {
   if (!Number.isFinite(value)) {
     return "";
@@ -75,11 +75,20 @@ const formatAxisValue = (value) => {
 const EthPriceChart = ({ price, history, status, error }) => {
   const sparkline = buildSparkline(history);
   const monthLabels = buildMonthLabels(history);
+  const chartId = useId();
+  const headingId = `${chartId}-heading`;
+  const svgTitleId = `${chartId}-title`;
+  const svgDescId = `${chartId}-desc`;
+  const rangeSummary = sparkline
+    ? `Range ${formatAxisValue(sparkline.minValue)} to ${formatAxisValue(
+        sparkline.maxValue
+      )}.`
+    : "";
 
   return (
-    <ChartCard>
+    <ChartCard aria-labelledby={headingId}>
       <ChartHeader>
-        <ChartTitle>Ethereum Price</ChartTitle>
+        <ChartTitle id={headingId}>Ethereum Price</ChartTitle>
         {status === "ready" ? (
           <ChartPrice>
             {price} <ChartCurrency>USD</ChartCurrency>
@@ -87,16 +96,25 @@ const EthPriceChart = ({ price, history, status, error }) => {
         ) : null}
       </ChartHeader>
       {status === "error" ? (
-        <ChartError>{error}</ChartError>
+        <ChartError role="alert">{error}</ChartError>
       ) : status === "ready" && sparkline ? (
         <>
           <ChartBody>
-            <ChartAxisLabels>
+            <ChartAxisLabels aria-hidden="true">
               <ChartAxisLabel>{formatAxisValue(sparkline.maxValue)}</ChartAxisLabel>
               <ChartAxisLabel>{formatAxisValue(sparkline.midValue)}</ChartAxisLabel>
               <ChartAxisLabel>{formatAxisValue(sparkline.minValue)}</ChartAxisLabel>
             </ChartAxisLabels>
-            <ChartSvg viewBox="0 0 100 40" preserveAspectRatio="none">
+            <ChartSvg
+              viewBox="0 0 100 40"
+              preserveAspectRatio="none"
+              role="img"
+              aria-labelledby={`${svgTitleId} ${svgDescId}`}
+            >
+              <title id={svgTitleId}>Ethereum price trend</title>
+              <desc id={svgDescId}>
+                Trend over the last 12 months. {rangeSummary}
+              </desc>
               <ChartGridLine x1="0" x2="100" y1="0.5" y2="0.5" />
               <ChartGridLine x1="0" x2="100" y1="20" y2="20" />
               <ChartGridLine x1="0" x2="100" y1="39.5" y2="39.5" />
@@ -105,7 +123,7 @@ const EthPriceChart = ({ price, history, status, error }) => {
             </ChartSvg>
           </ChartBody>
           {monthLabels.length ? (
-            <ChartMonthAxis>
+            <ChartMonthAxis aria-hidden="true">
               {monthLabels.map((label, index) => (
                 <ChartMonthLabel key={`${label}-${index}`}>
                   {label}
@@ -116,7 +134,9 @@ const EthPriceChart = ({ price, history, status, error }) => {
           <ChartMeta>Last 12 months, powered by CoinGecko.</ChartMeta>
         </>
       ) : (
-        <ChartStatus>Loading ETH price...</ChartStatus>
+        <ChartStatus role="status" aria-live="polite">
+          Loading ETH price...
+        </ChartStatus>
       )}
     </ChartCard>
   );

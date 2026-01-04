@@ -12,6 +12,7 @@ import {
   GlobalStyle,
   LogoBadge,
   LogoMark,
+  SkipLink,
 } from "./styles";
 
 function App({ gasState, ethState, newsState }) {
@@ -22,10 +23,11 @@ function App({ gasState, ethState, newsState }) {
   return (
     <AppContainer>
       <GlobalStyle />
-      <AppShell>
+      <SkipLink href="#main-content">Skip to main content</SkipLink>
+      <AppShell id="main-content" tabIndex="-1">
         <AppHeader>
           <LogoBadge>
-            <LogoMark src={EthereumLogo} alt='Ethereum Logo' />
+            <LogoMark src={EthereumLogo} alt="Ethereum Logo" />
           </LogoBadge>
           <AppHeaderMeta>
             <AppTitle>MarketPulse Dashboard</AppTitle>

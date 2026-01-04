@@ -21,11 +21,48 @@ export const GlobalStyle = createGlobalStyle`
     font-family: "Manrope", "Segoe UI", sans-serif;
     background: #f3f6fb;
     color: #0f1c2e;
+    line-height: 1.5;
   }
 
   img {
     max-width: 100%;
     display: block;
+  }
+
+  :focus-visible {
+    outline: 2px solid #0b5ed7;
+    outline-offset: 2px;
+  }
+
+  .sr-only {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap;
+  }
+`;
+
+export const SkipLink = styled.a`
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  padding: 10px 14px;
+  background: #0b5ed7;
+  color: #ffffff;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transform: translateY(-160%);
+  transition: transform 0.2s ease;
+  z-index: 2;
+
+  &:focus {
+    transform: translateY(0);
   }
 `;
 
@@ -64,7 +101,7 @@ export const AppContainer = styled.div`
   }
 `;
 
-export const AppShell = styled.div`
+export const AppShell = styled.main`
   max-width: 860px;
   margin: 0 auto;
   position: relative;

@@ -64,26 +64,33 @@ const EthNews = ({ items, status, error }) => {
   };
 
   return (
-    <NewsCard>
+    <NewsCard aria-labelledby="news-heading">
       <NewsHeader>
-        <NewsTitle>Ethereum News</NewsTitle>
+        <NewsTitle id="news-heading">Ethereum News</NewsTitle>
         <NewsBadge>Live</NewsBadge>
       </NewsHeader>
       {status === "error" ? (
-        <NewsError>{error}</NewsError>
+        <NewsError role="alert">{error}</NewsError>
       ) : status === "ready" ? (
         <>
           <NewsList>
             {pageItems.map((item) => {
               const imageUrl = item.imageUrl || EthereumLogo;
               const isFallback = !item.imageUrl;
+              const timestampLabel = formatTimestamp(item.timestamp);
+              const metaParts = [item.source, timestampLabel].filter(Boolean);
+              const metaLabel = metaParts.join(", ");
+              const ariaLabel = metaLabel
+                ? `${item.title}. ${metaLabel}. Opens in new tab.`
+                : `${item.title}. Opens in new tab.`;
 
               return (
                 <NewsItem key={item.id}>
                   <NewsItemLink
                     href={item.url}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noreferrer noopener"
+                    aria-label={ariaLabel}
                   >
                     <NewsImageWrap>
                       <NewsImage
@@ -98,7 +105,7 @@ const EthNews = ({ items, status, error }) => {
                       <NewsLink>{item.title}</NewsLink>
                       <NewsMeta>
                         <span>{item.source}</span>
-                        <span>{formatTimestamp(item.timestamp)}</span>
+                        <span>{timestampLabel}</span>
                       </NewsMeta>
                     </NewsContent>
                   </NewsItemLink>
@@ -107,13 +114,14 @@ const EthNews = ({ items, status, error }) => {
             })}
           </NewsList>
           {showPagination ? (
-            <NewsPagination>
+            <NewsPagination aria-label="News pagination">
               <NewsPageButton
                 type="button"
                 onClick={() =>
                   setCurrentPage((prev) => Math.max(0, prev - 1))
                 }
                 disabled={currentPage === 0}
+                aria-label="Previous page"
               >
                 Prev
               </NewsPageButton>
@@ -125,6 +133,7 @@ const EthNews = ({ items, status, error }) => {
                     onClick={() => setCurrentPage(pageIndex)}
                     data-active={pageIndex === currentPage}
                     aria-current={pageIndex === currentPage ? "page" : undefined}
+                    aria-label={`Go to page ${pageIndex + 1}`}
                   >
                     {pageIndex + 1}
                   </NewsPageButton>
@@ -138,6 +147,7 @@ const EthNews = ({ items, status, error }) => {
                   )
                 }
                 disabled={currentPage === totalPages - 1}
+                aria-label="Next page"
               >
                 Next
               </NewsPageButton>
@@ -145,7 +155,9 @@ const EthNews = ({ items, status, error }) => {
           ) : null}
         </>
       ) : (
-        <NewsStatus>Loading Ethereum news...</NewsStatus>
+        <NewsStatus role="status" aria-live="polite">
+          Loading Ethereum news...
+        </NewsStatus>
       )}
     </NewsCard>
   );

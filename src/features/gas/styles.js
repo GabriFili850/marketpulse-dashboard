@@ -20,14 +20,31 @@ export const GasPriceContainer = styled.section`
   animation: ${liftIn} 0.6s ease-out;
 `;
 
-export const GasPriceGrid = styled.div`
+export const GasPriceHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+export const GasPriceTitle = styled.h2`
+  margin: 0;
+  font-size: 1rem;
+  color: #22324a;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+`;
+
+export const GasPriceGrid = styled.ul`
+  list-style: none;
+  padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 14px;
-  margin-top: 8px;
+  margin: 12px 0 0;
 `;
 
-export const GasPriceItem = styled.div`
+export const GasPriceItem = styled.li`
   display: flex;
   flex-direction: column;
   gap: 8px;

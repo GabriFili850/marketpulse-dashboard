@@ -3,8 +3,10 @@ import {
   ErrorText,
   GasPriceContainer,
   GasPriceGrid,
+  GasPriceHeader,
   GasPriceItem,
   GasPriceLabel,
+  GasPriceTitle,
   GasPriceUnit,
   GasPriceValue,
   StatusText,
@@ -12,9 +14,12 @@ import {
 
 const GasPriceView = ({ gasPrices, countdown, error, status = "loading" }) => {
   return (
-    <GasPriceContainer>
+    <GasPriceContainer aria-labelledby="gas-price-heading">
+      <GasPriceHeader>
+        <GasPriceTitle id="gas-price-heading">Gas Prices</GasPriceTitle>
+      </GasPriceHeader>
       {status === "error" ? (
-        <ErrorText>{error}</ErrorText>
+        <ErrorText role="alert">{error}</ErrorText>
       ) : status === "ready" ? (
         <>
           <GasPriceGrid>
@@ -40,7 +45,9 @@ const GasPriceView = ({ gasPrices, countdown, error, status = "loading" }) => {
           <CountdownText>Refreshing in {countdown} seconds...</CountdownText>
         </>
       ) : (
-        <StatusText>Loading gas price...</StatusText>
+        <StatusText role="status" aria-live="polite">
+          Loading gas price...
+        </StatusText>
       )}
     </GasPriceContainer>
   );
