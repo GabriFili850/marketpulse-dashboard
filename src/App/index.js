@@ -30,7 +30,7 @@ function App({ gasState, ethState, newsState }) {
             <LogoMark src={EthereumLogo} alt="Ethereum Logo" />
           </LogoBadge>
           <AppHeaderMeta>
-            <AppTitle>MarketPulse Dashboard</AppTitle>
+            <AppTitle>MarketPulse Crypto</AppTitle>
             <AppSubtitle>
               Ethereum price and gas, built to grow across chains.
             </AppSubtitle>

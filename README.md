@@ -1,5 +1,5 @@
-# MarketPulse Dashboard
-MarketPulse Dashboard is a React dashboard that displays Ethereum price and gas data in real time, along with a 12‑month ETH price chart. The app fetches gas oracle data from the Etherscan API and uses CoinGecko for the ETH price history, updating on a configurable interval. This tool can be useful for Ethereum users who want to keep track of gas prices to optimize transaction costs.
+# MarketPulse Crypto
+MarketPulse Crypto is a React dashboard that displays Ethereum price and gas data in real time, along with a 12‑month ETH price chart. The app fetches gas oracle data from the Etherscan API and uses CoinGecko for the ETH price history, updating on a configurable interval. This tool can be useful for Ethereum users who want to keep track of gas prices to optimize transaction costs.
 
 ## Features
 Shows Ethereum price in real time
@@ -12,13 +12,13 @@ Responsive and mobile-friendly design
 
 
 ## Setup
-To set up MarketPulse Dashboard, follow these steps:
+To set up MarketPulse Crypto, follow these steps:
 
 ### Clone the repository:
 
-git clone https://github.com/GabriFili850/marketpulse-dashboard.git
+git clone https://github.com/GabriFili850/marketpulse-crypto.git
 
-cd marketpulse-dashboard
+cd marketpulse-crypto
 
 ### Install the required dependencies:
 
@@ -46,7 +46,7 @@ Replace YOUR_ETHERSCAN_API_KEY with your actual Etherscan API key. You can obtai
 
 `npm start`
 
-The MarketPulse Dashboard app should now be running on http://localhost:3000.
+The MarketPulse Crypto app should now be running on http://localhost:3000.
 
 ### Technologies Used
 React
@@ -62,8 +62,8 @@ Create React App
 Netlify (for deployment)
 
 ## Live Demo
-MarketPulse Dashboard is deployed on Netlify and can be accessed through this link:
+MarketPulse Crypto is deployed on Netlify and can be accessed through this link:
 
-https://marketpulse-dashboard.netlify.app
+https://marketpulse-crypto.netlify.app
 
 Feel free to visit the live demo to see the app in action without needing to set up the project locally.
